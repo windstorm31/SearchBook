@@ -1,12 +1,14 @@
 
 <html>
   <head>
+  <link rel="stylesheet" type="text/css" href="form.css"/>
+  <link rel="stylesheet" type="text/css" href="button.css"/>
   <link rel="stylesheet" type="text/css" href="table.css"/>
   </head>
-  <body>
+  <body background ="background.jpg">
   <br>
   <center><h1> Search Book </h1></center>
-  <input type="button" id="BACK" value="BACK" onclick="location.href = 'http://localhost/topic/index.html';" class="btn btn-default"/>
+  <input type="button" id="BACK" value="BACK" onclick="location.href = 'http://ec2-54-169-41-122.ap-southeast-1.compute.amazonaws.com/topic/index.html';" class="btn btn-default"/>
 
   <div align="right">
   <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
@@ -24,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
    	} else {
       $searchK = $_POST["key"];
    	}
-   	$client = new nusoap_client("http://localhost/topic/WebServiceServer.php?wsdl");
+   	$client = new nusoap_client("http://ec2-54-169-41-122.ap-southeast-1.compute.amazonaws.com/topic/WebServiceServer.php?wsdl");
 	  $result = $client->call("findBook", array("keyword" => "$searchK"));
     echo "<h2>Result</h2>";
     echo "keyword : $searchK <br><br>";
@@ -64,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           $index = $index+1;
           break; 
         case 5:
-          echo "<td> ".'$'."$value </td>\n";
+          echo "<td> "."$value </td>\n";
           $index = $index+1;
           break;  
         

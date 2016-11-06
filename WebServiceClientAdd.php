@@ -1,12 +1,10 @@
 <html>
 <head>
+
 <title>Client SOAP</title>
 <style type=text/css>
 		
-		body {
-                background: #D7DBDD; /* fallback for old browsers */
-             
-        }
+
 		.keys
 		{
 			color:#212F3C;
@@ -21,20 +19,22 @@
 			-->
 	 
 </style>
+<link rel="stylesheet" type="text/css" href="form.css"/>
+<link rel="stylesheet" type="text/css" href="button.css"/>
 </head>
-<body>
+<body background ="background.jpg">
 <?php
 	// FOR DISABLE ERROR INPUT NOTICE
 	error_reporting( error_reporting() & ~E_NOTICE );
 	// FOR CALL NUSOAP
 	require("lib/nusoap.php");
 ?>
-<input type="button" id="BACK" value="BACK" onclick="location.href = 'http://localhost/topic/index.html';" class="btn btn-default"/>
+<input type="button" id="BACK" value="BACK" onclick="location.href = 'http://ec2-54-169-41-122.ap-southeast-1.compute.amazonaws.com/topic/index.html';" class="btn btn-default"/>
 <!-- ADD SERVICE -->
 <h1> Add Book By Name Service </h1>
 <?php
   	if($_POST['submit_add'] == "Submit") {
-        $client = new nusoap_client("http://localhost/topic/WebServiceServer.php?wsdl",true); 
+        $client = new nusoap_client("http://ec2-54-169-41-122.ap-southeast-1.compute.amazonaws.com/topic/WebServiceServer.php?wsdl",true); 
 		$add = array(
 			'titleVar'=>$_POST['from_title'],
 			'authorVar'=>$_POST['from_author'],
