@@ -1,114 +1,87 @@
 
-<!DOCTYPE html>
-<?php
-	require 'lib/nusoap.php';
-	$client=new nusoap_client('http://localhost/topic/WebServiceServer.php?wsdl');
-
-	//$response=$client->call('price', array("name" => "$book_name")); 
-?>
 <html>
+  <head>
+  <link rel="stylesheet" type="text/css" href="table.css"/>
+  </head>
+  <body>
+  <br>
+  <center><h1> Search Book </h1></center>
+  <input type="button" id="BACK" value="BACK" onclick="location.href = 'http://localhost/topic/index.html';" class="btn btn-default"/>
+
+  <div align="right">
+  <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+      Search  : <input type="text" name="key" onkeyup="(<?php echo $keyword;?>)">
+  <input type="submit" name="submit" value="Search"> 
+  </form>
+</div>
 
 
-<head>
-<link type="text/css" rel="stylesheet" href="css_layout.css">
-<meta http-equiv="Content-Type" content="text/html; charset=tis-620">
+<?php
+require_once("lib/nusoap.php");
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+   	if (empty($_POST["key"])) {
+      $searchK = "";
+   	} else {
+      $searchK = $_POST["key"];
+   	}
+   	$client = new nusoap_client("http://localhost/topic/WebServiceServer.php?wsdl");
+	  $result = $client->call("findBook", array("keyword" => "$searchK"));
+    echo "<h2>Result</h2>";
+    echo "keyword : $searchK <br><br>";
+    $index = 0;
+    echo  '<div align="center">
+              <table>
+                    <tr>
+                        <th> Catagory </th>
+                        <th> Title </th>
+                        <th> Author </th>
+                        <th> Publisher </th>
+                        <th> Publish_date </th>
+                        <th> Price </th>
+                    </tr>
+                    <tr>'."\n";
 
-<title>Book Web Service</title>
+    foreach ($result as $key => $value) {
+      switch ($index) {
+        case 0:
+          echo "<td> $value </td>\n";
+          $index = $index+1;
+          break;
+        case 1:
+          echo "<td> $value </td>\n";
+          $index = $index+1;
+          break;
+        case 2:
+          echo "<td> $value </td>\n";
+          $index = $index+1;
+          break;
+        case 3:
+          echo "<td> $value </td>\n";
+          $index = $index+1;
+          break;
+        case 4:
+          echo "<td> $value </td>\n";
+          $index = $index+1;
+          break; 
+        case 5:
+          echo "<td> ".'$'."$value </td>\n";
+          $index = $index+1;
+          break;  
+        
+      }
+      if(($key+1) %6 ==0 ){
+          $index = 0;
+          echo "</tr>\n";
+          if($key+1 < sizeof($result)){
+            echo "<tr>\n";
+          }
+          
+      }
+    }
+    echo "</table></div>";
+}
 
-<STYLE type=text/css>
-  
-A:link { color: #0000cc; text-decoration:none}
-  
-A:visited {color: #0000cc; text-decoration: none}
-  
-A:hover {color: red; text-decoration: none}
- 
-</STYLE>
+?>
 
-<style type="text/css">
-
-<!--
-
-small { font-family: Arial, Helvetica, sans-serif; font-size: 8pt; } 
-
-input, textarea { font-family: Arial, Helvetica, sans-serif; font-size: 9pt; } 
-
-b { font-family: Arial, Helvetica, sans-serif; font-size: 12pt; } 
-
-big { font-family: Arial, Helvetica, sans-serif; font-size: 20pt; } 
-
-strong { font-family: Arial, Helvetica, sans-serif; font-size: 11pt; font-weight : extra-bold; } 
-
-font, td { font-family: Arial, Helvetica, sans-serif; font-size: 11pt; } 
-
-BODY { font-size: 11pt; font-family: Arial, Helvetica, sans-serif; } 
--->
-
-</style>
-<script language="JavaScript" type="text/javascript">
-
-	<!--
-	function checkform ( form )
-	{
-	  if (form.input.value == "") {
-		alert( "Please fill data in the gaps" );
-		form.input.focus();
-		return false ;
-	  }  
-	  return true ;
-	}
-	//-->
-</script>
-</head>
-<body background ="background.jpg">
-	<div id="all">
-    <div id="header"><h1>Search Book</h1>
-    	<ul id="drop-nav">
-		  <li><a href="#" action= "client.php">HOME</a></li>
-		  <li><a href="#">Category</a>
-		    <ul>
-		      <li><a href= "category.php?value_key=manga">Manga</a></li>
-			  <li><a href= "category.php?value_key=Education and Teaching">Education and Teaching</a></li>
-			  <li><a href= "category.php?value_key=computers-technology">computers-technology</a></li>	
-			  <li><a href= "category.php?value_key=fiction">fiction</a></li>	
-			  <li><a href= "category.php?value_key=travel">travel</a></li>
-			  <li><a href= "category.php?value_key=cookbooks">cookbooks</a></li>	
-			  <li><a href= "category.php?value_key=romance">romance</a></li>	
-			  <li><a href= "category.php?value_key=psychology">psychology</a></li>	
-			  <li><a href= "category.php?value_key=Science Fiction and Fantasy">Science Fiction and Fantasy</a></li>	
-			  <li><a href= "category.php?value_key=History">History</a></li>				  	
-		    </ul>
-		  </li>
-		  <li>
-		  	<form method="POST">
-				<p>Book Name: 
-					<INPUT type="text" name="book_name" size="50" maxlength="100">
-					<INPUT action="search.php" type="submit" name="submit_search" value="Submit"> </p>
-			</form>
-		  </li>	
-		</ul>
-   	</div>     
-     <div id="content">
-          <?php
-          	$query_age = (isset($_POST['submit_search']) ? $_POST['submit_search'] : null);
-			  	if($query_age == "Submit") {
-					$book_name=$_POST['book_name'];
-    			    $client = new nusoap_client("http://localhost/book/WebServiceServer.php?wsdl",true); 
-        			$params = array("book_name"=>$book_name);
-       				$data = $client->call("find_book",$params); 
-       				echo $data;
-    			}
-			$response=$client->call('allbook', array("book_all" => ""));
-			echo "ALL Books"; 
-			echo "<br>";
-			$arrlength = count($response);
-				for($x = 0; $x < $arrlength; $x++) {
-				    echo $x+1 ;
-				    echo "---" ;
-				    echo $response[$x];
-				    echo "<br>";
-				}
-			?>
-     </div>
 </body>
 </html>
